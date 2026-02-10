@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     JWT_ALG : str
     ACCESS_TOKEN_EXPIRE_MINUTES : int = 30
     ADMIN_BOOTSTRAP_SECRET : str | None = None
+    CORS_ORIGINS : str | None = None
 
 @lru_cache
 def get_settings() -> Settings:

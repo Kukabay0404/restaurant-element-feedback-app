@@ -1,0 +1,42 @@
+databases:
+  - name: element-feedback-db
+    plan: free
+    databaseName: element_feedback
+    user: element_feedback_user
+
+services:
+  - type: web
+    name: element-feedback-api
+    env: docker
+    plan: free
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
+    healthCheckPath: /api/v1/feedback/
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: element-feedback-db
+          property: connectionString
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: JWT_ALG
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "30"
+      - key: ADMIN_BOOTSTRAP_SECRET
+        generateValue: true
+      - key: CORS_ORIGINS
+        value: https://element-feedback-frontend.onrender.com,http://127.0.0.1:5173,http://localhost:5173
+
+  - type: web
+    name: element-feedback-frontend
+    env: static
+    plan: free
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    pullRequestPreviewsEnabled: false
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://element-feedback-api.onrender.com

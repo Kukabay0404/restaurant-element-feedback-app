@@ -5,15 +5,22 @@ import uvicorn
 import time
 
 from api.router import router as v1_router
+from core.config import get_settings
 
 app = FastAPI()
+settings = get_settings()
+
+default_origins = [
+    "http://127.0.0.1:5173",
+    "http://localhost:5173",
+]
+configured_origins = []
+if settings.CORS_ORIGINS:
+    configured_origins = [origin.strip() for origin in settings.CORS_ORIGINS.split(",") if origin.strip()]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://127.0.0.1:5173",
-        "http://localhost:5173",
-    ],
+    allow_origins=configured_origins or default_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

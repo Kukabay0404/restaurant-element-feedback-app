@@ -3,5 +3,10 @@ pydantic-settings
 sqlalchemy
 uvicorn
 aiosqlite
+asyncpg
 alembic
 passlib
+python-jose
+python-multipart
+email-validator
+argon2-cffi

@@ -1,0 +1,49 @@
+{
+  "timestamp": "2026-02-10T15:10:42.206Z",
+  "base_url": "http://127.0.0.1:5173",
+  "total": 8,
+  "pass": 8,
+  "fail": 0,
+  "results": [
+    {
+      "id": "A-01",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "id": "A-04",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "id": "E-01",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "id": "E-02",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "id": "F-02",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "id": "F-03",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "id": "B-04",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "id": "E-03",
+      "status": "PASS",
+      "details": ""
+    }
+  ]
+}
