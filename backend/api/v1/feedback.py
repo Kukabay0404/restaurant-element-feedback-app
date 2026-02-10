@@ -8,7 +8,9 @@ from crud.feedback import (
     get_feedback_list,
     set_feedback_approved,
 )
+from crud.moderation import get_or_create_moderation_settings, update_moderation_settings
 from schemas.feedback import FeedbackCreate, FeedbackOut
+from schemas.moderation import ModerationSettingsOut, ModerationSettingsUpdate
 from db.session import get_db
 from core.deps import get_current_user
 
@@ -71,3 +73,30 @@ async def approve_feedback(
     if not feedback:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Feedback not found')
     return await set_feedback_approved(feedback=feedback, is_approved=True, db=db)
+
+
+@router.get(
+    path='/admin/settings/moderation',
+    response_model=ModerationSettingsOut,
+)
+async def get_moderation_settings(
+    db: AsyncSession = Depends(get_db),
+    _user=Depends(get_current_user),
+):
+    return await get_or_create_moderation_settings(db)
+
+
+@router.patch(
+    path='/admin/settings/moderation',
+    response_model=ModerationSettingsOut,
+)
+async def patch_moderation_settings(
+    payload: ModerationSettingsUpdate,
+    db: AsyncSession = Depends(get_db),
+    _user=Depends(get_current_user),
+):
+    return await update_moderation_settings(
+        db,
+        auto_approve_enabled=payload.auto_approve_enabled,
+        manual_review_rating_threshold=payload.manual_review_rating_threshold,
+    )

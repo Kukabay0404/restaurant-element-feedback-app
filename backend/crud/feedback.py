@@ -3,14 +3,21 @@ from sqlalchemy import select
 
 from schemas.feedback import FeedbackCreate
 from models.feedback import FeedBack
+from crud.moderation import get_or_create_moderation_settings
 
 async def create_feedback(db :AsyncSession, payload : FeedbackCreate):
+    moderation_settings = await get_or_create_moderation_settings(db)
+    should_auto_approve = (
+        moderation_settings.auto_approve_enabled
+        and payload.rating > moderation_settings.manual_review_rating_threshold
+    )
     feedback = FeedBack(
         type=payload.type, 
         rating=payload.rating,
         text=payload.text,
         name=payload.name,
-        contact=payload.contact
+        contact=payload.contact,
+        is_approved=should_auto_approve,
     )
     db.add(feedback)
     await db.commit()

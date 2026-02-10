@@ -95,10 +95,13 @@ export default function Dashboard() {
             <span className="dashboard-nav-icon" />
             Аналитика
           </NavLink>
-          <button className="dashboard-nav-item" type="button">
+          <NavLink
+            to="/dashboard/settings"
+            className={({ isActive }) => `dashboard-nav-item ${isActive ? "active" : ""}`}
+          >
             <span className="dashboard-nav-icon" />
             Настройки
-          </button>
+          </NavLink>
         </nav>
         <div className="dashboard-sidebar-footer">Админ-панель</div>
       </aside>

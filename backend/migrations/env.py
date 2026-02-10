@@ -9,6 +9,7 @@ from core.config import get_settings
 from db.base import Base
 import models.user  # noqa: F401
 import models.feedback  # noqa: F401
+import models.moderation_settings  # noqa: F401
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

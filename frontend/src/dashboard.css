@@ -384,6 +384,70 @@
   margin-top: 18px;
 }
 
+.settings-title {
+  margin: 0;
+  font-size: 24px;
+}
+
+.settings-layout {
+  margin-top: 20px;
+  display: grid;
+  gap: 16px;
+}
+
+.settings-form {
+  display: grid;
+  gap: 14px;
+}
+
+.settings-field {
+  display: grid;
+  gap: 8px;
+}
+
+.settings-field span {
+  font-size: 14px;
+  color: var(--dashboard-text);
+}
+
+.settings-field input[type="number"] {
+  width: min(220px, 100%);
+  border: 1px solid var(--dashboard-line);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 15px;
+}
+
+.settings-field input[type="number"]:focus {
+  outline: none;
+  border-color: var(--dashboard-accent);
+  box-shadow: 0 0 0 3px rgba(23, 167, 104, 0.15);
+}
+
+.settings-toggle {
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  max-width: 420px;
+}
+
+.settings-toggle input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--dashboard-accent);
+}
+
+.settings-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.settings-success {
+  margin: 0 0 12px;
+  color: var(--dashboard-accent);
+  font-size: 13px;
+}
+
 .analytics-filters {
   display: flex;
   flex-wrap: wrap;
