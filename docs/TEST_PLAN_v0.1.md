@@ -53,6 +53,6 @@ Validate MVP stability before release: core user flows, moderation settings beha
 
 ## 7. Immediate Next Actions
 1. Enable and monitor backend CI workflow `.github/workflows/backend-tests.yml`.
-2. Create manual QA checklist document with pass/fail columns.
+2. Run manual QA checklist `docs/MANUAL_QA_CHECKLIST_v0.1.md` on staging.
 3. Run `loadtests/k6_feedback_smoke.js` on staging and capture report.
 4. Define release gate meeting with Go/No-Go decision.
