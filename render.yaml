@@ -8,6 +8,7 @@ services:
   - type: web
     name: element-feedback-api
     env: docker
+    plan: free
     rootDir: backend
     dockerfilePath: ./Dockerfile
     autoDeploy: true
