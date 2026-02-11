@@ -399,44 +399,42 @@ textarea {
   }
 
   .filter {
-    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 }
 
 @media (max-width: 540px) {
   .page {
-    padding: 32px 12px;
+    padding: 24px 10px;
   }
 
   .card {
     border-radius: 24px;
-    padding: 28px 16px 24px;
+    padding: 22px 14px 18px;
   }
 
   .brand {
     letter-spacing: 3px;
+    font-size: 40px;
   }
 
   .tagline {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .toggle {
-    grid-template-columns: 1fr;
+    max-width: 460px;
+    margin: 12px auto 18px;
   }
 
   .toggle-pill {
-    width: calc(100% - 12px);
-    transform: translateY(0);
-  }
-
-  .toggle-btn.active:nth-of-type(2) ~ .toggle-pill {
-    transform: translateY(100%);
+    width: calc(50% - 6px);
   }
 
   .rating-row {
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 10px;
+    gap: 8px;
   }
 
   .rating-btn {
@@ -449,24 +447,45 @@ textarea {
 
   input,
   textarea {
-    font-size: 15px;
+    font-size: 16px;
+    padding: 11px 14px;
   }
 
   .submit {
     letter-spacing: 1px;
+    padding: 12px 18px;
   }
 
   .reviews {
     border-radius: 24px;
-    padding: 20px 14px;
+    padding: 18px 12px;
   }
 
   .section-title {
-    font-size: 22px;
+    font-size: 34px;
     text-align: center;
+    letter-spacing: 1px;
   }
 
   .grid {
     grid-template-columns: 1fr;
+  }
+
+  .filter {
+    width: 100%;
+    border-radius: 999px;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .filter-btn {
+    padding: 8px 14px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .review-card {
+    min-height: 140px;
+    padding: 14px 14px;
   }
 }
