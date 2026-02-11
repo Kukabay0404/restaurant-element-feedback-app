@@ -2,7 +2,6 @@ fastapi
 pydantic-settings
 sqlalchemy
 uvicorn
-aiosqlite
 asyncpg
 alembic
 passlib

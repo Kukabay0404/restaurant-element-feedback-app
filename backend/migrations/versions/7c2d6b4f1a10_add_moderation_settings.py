@@ -22,14 +22,14 @@ def upgrade() -> None:
     op.create_table(
         "moderation_settings",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("auto_approve_enabled", sa.Boolean(), server_default=sa.text("0"), nullable=False),
+        sa.Column("auto_approve_enabled", sa.Boolean(), server_default=sa.false(), nullable=False),
         sa.Column("manual_review_rating_threshold", sa.Integer(), server_default=sa.text("6"), nullable=False),
         sa.CheckConstraint("manual_review_rating_threshold BETWEEN 1 AND 10", name="manual_review_threshold_check"),
         sa.PrimaryKeyConstraint("id"),
     )
     op.execute(
         sa.text(
-            "INSERT INTO moderation_settings (auto_approve_enabled, manual_review_rating_threshold) VALUES (0, 6)"
+            "INSERT INTO moderation_settings (auto_approve_enabled, manual_review_rating_threshold) VALUES (false, 6)"
         )
     )
 

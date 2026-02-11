@@ -28,7 +28,7 @@ def upgrade() -> None:
     sa.Column('text', sa.Text(), nullable=False),
     sa.Column('name', sa.String(length=250), nullable=False),
     sa.Column('contact', sa.String(length=50), nullable=False),
-    sa.Column('is_approved', sa.Boolean(), server_default=sa.text('0'), nullable=False),
+    sa.Column('is_approved', sa.Boolean(), server_default=sa.false(), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=False),
     sa.Column('source', sa.String(length=150), nullable=True),
     sa.CheckConstraint("type IN ('review','suggestion')", name='feedback_type_check'),
