@@ -8,7 +8,6 @@ services:
   - type: web
     name: element-feedback-api
     env: docker
-    plan: free
     rootDir: backend
     dockerfilePath: ./Dockerfile
     autoDeploy: true
@@ -32,7 +31,6 @@ services:
   - type: web
     name: element-feedback-frontend
     env: static
-    plan: free
     rootDir: frontend
     buildCommand: npm ci && npm run build
     staticPublishPath: ./dist
