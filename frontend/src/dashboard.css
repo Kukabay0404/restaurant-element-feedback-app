@@ -780,37 +780,168 @@
 @media (max-width: 840px) {
   .dashboard {
     grid-template-columns: 1fr;
-    padding: 20px;
+    padding: 16px;
+    gap: 14px;
   }
 
   .dashboard-sidebar {
-    flex-direction: row;
-    align-items: center;
-    gap: 16px;
+    padding: 16px 14px;
+    border-radius: 20px;
+    gap: 12px;
   }
 
   .dashboard-nav {
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin-top: 10px;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+
+  .dashboard-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .dashboard-nav-item {
+    flex: 0 0 auto;
+    white-space: nowrap;
   }
 
   .dashboard-main {
-    padding: 20px;
+    padding: 18px;
+    border-radius: 22px;
+  }
+
+  .dashboard-sidebar-footer {
+    display: none;
   }
 }
 
 @media (max-width: 640px) {
+  .dashboard {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .dashboard-sidebar {
+    border-radius: 16px;
+    padding: 12px;
+  }
+
+  .dashboard-logo {
+    font-size: 18px;
+    letter-spacing: 1px;
+  }
+
+  .dashboard-nav-item {
+    font-size: 13px;
+    padding: 9px 10px;
+    border-radius: 10px;
+  }
+
+  .dashboard-main {
+    padding: 14px;
+    border-radius: 18px;
+  }
+
   .dashboard-topbar {
     flex-direction: column;
     align-items: stretch;
+    gap: 10px;
+  }
+
+  .dashboard-search {
+    max-width: none;
+  }
+
+  .dashboard-topbar-actions {
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .dashboard-stats {
+    margin-top: 14px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .dashboard-stat-card {
+    min-height: auto;
+    padding: 12px;
+  }
+
+  .dashboard-stat-card h3 {
+    font-size: 22px;
+  }
+
+  .dashboard-content {
+    margin-top: 14px;
+    gap: 12px;
+  }
+
+  .dashboard-table-card,
+  .dashboard-detail-card {
+    border-radius: 16px;
+    padding: 12px;
+  }
+
+  .dashboard-table-header {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .dashboard-filters {
+    width: 100%;
+    overflow-x: auto;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+  }
+
+  .dashboard-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .dashboard-filter-btn {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .dashboard-table {
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: thin;
   }
 
   .dashboard-table-row {
-    grid-template-columns: 1fr;
-    gap: 6px;
+    min-width: 640px;
+  }
+
+  .dashboard-table-row.reviews {
+    min-width: 780px;
   }
 
   .dashboard-table-head {
-    display: none;
+    display: grid;
+  }
+
+  .dashboard-actions {
+    justify-content: flex-start;
+  }
+
+  .analytics-trend {
+    height: 160px;
+  }
+
+  .settings-title {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-stats {
+    grid-template-columns: 1fr;
   }
 }
