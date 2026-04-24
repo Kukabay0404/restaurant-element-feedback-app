@@ -14,6 +14,9 @@ async def create_feedback(db :AsyncSession, payload : FeedbackCreate):
     feedback = FeedBack(
         type=payload.type, 
         rating=payload.rating,
+        service_rating=payload.service_rating,
+        food_rating=payload.food_rating,
+        interior_rating=payload.interior_rating,
         text=payload.text,
         name=payload.name,
         contact=payload.contact,

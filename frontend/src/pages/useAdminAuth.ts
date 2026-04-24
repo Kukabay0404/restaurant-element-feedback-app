@@ -1,5 +1,7 @@
 import { useCallback, useState, type FormEvent } from "react";
 
+import { readJsonResponse } from "../api";
+
 const TOKEN_KEY = "admin_token";
 
 export type AuthState = {
@@ -50,7 +52,7 @@ export default function useAdminAuth(apiBase: string) {
         if (!response.ok) {
           throw new Error("Неверный логин или пароль");
         }
-        const data = (await response.json()) as { access_token: string };
+        const data = await readJsonResponse<{ access_token: string }>(response, "Не удалось войти");
         saveToken(data.access_token);
         setAuthStatus("idle");
         setPassword("");

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import "../dashboard.css";
+import { getApiBase, readJsonResponse } from "../api";
 import AdminLogin from "./AdminLogin";
 import useAdminAuth from "./useAdminAuth";
 
@@ -15,7 +16,7 @@ const DEFAULT_SETTINGS: ModerationSettings = {
 };
 
 export default function Settings() {
-  const apiBase = import.meta.env.VITE_API_BASE_URL ?? "";
+  const apiBase = getApiBase();
   const { token, email, password, authStatus, authError, setEmail, setPassword, handleLogin, logout } =
     useAdminAuth(apiBase);
 
@@ -55,7 +56,7 @@ export default function Settings() {
       if (!response.ok) {
         throw new Error("Не удалось загрузить настройки");
       }
-      const data = (await response.json()) as ModerationSettings;
+      const data = await readJsonResponse<ModerationSettings>(response, "Не удалось загрузить настройки");
       setSettings({
         auto_approve_enabled: data.auto_approve_enabled,
         manual_review_rating_threshold: data.manual_review_rating_threshold,
@@ -84,7 +85,7 @@ export default function Settings() {
       if (!response.ok) {
         throw new Error("Не удалось сохранить настройки");
       }
-      const data = (await response.json()) as ModerationSettings;
+      const data = await readJsonResponse<ModerationSettings>(response, "Не удалось сохранить настройки");
       setSettings(data);
       setStatus("idle");
       setSuccess("Настройки сохранены");

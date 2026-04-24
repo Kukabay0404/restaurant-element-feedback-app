@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Enum, String, CheckConstraint, Text, DateTime, func
+from sqlalchemy import Boolean, CheckConstraint, DateTime, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from datetime import datetime
@@ -10,6 +10,9 @@ class FeedBack(Base):
     __table_args__ = (
         CheckConstraint("type IN ('review','suggestion')", name="feedback_type_check"),
         CheckConstraint("rating BETWEEN 1 AND 10", name="rating_range_check"),
+        CheckConstraint("service_rating BETWEEN 1 AND 5", name="service_rating_range_check"),
+        CheckConstraint("food_rating BETWEEN 1 AND 5", name="food_rating_range_check"),
+        CheckConstraint("interior_rating BETWEEN 1 AND 5", name="interior_rating_range_check"),
     )
 
     id : Mapped[int] = mapped_column(primary_key=True)
@@ -17,6 +20,9 @@ class FeedBack(Base):
     type: Mapped[Literal['review', 'suggestion']] = mapped_column(String(20), nullable=False)
     
     rating : Mapped[int] = mapped_column(nullable=False)
+    service_rating: Mapped[int] = mapped_column(nullable=False)
+    food_rating: Mapped[int] = mapped_column(nullable=False)
+    interior_rating: Mapped[int] = mapped_column(nullable=False)
 
     text : Mapped[str] = mapped_column(Text, nullable=False)
     name : Mapped[str] = mapped_column(String(250), nullable=False, index=True)

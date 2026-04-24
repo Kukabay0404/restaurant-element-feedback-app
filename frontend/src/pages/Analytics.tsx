@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
 import { NavLink } from "react-router-dom";
 import "../dashboard.css";
+import { getApiBase } from "../api";
+import { ratingCategories } from "../feedbackRatings";
 import AdminLogin from "./AdminLogin";
 import useAdminAuth from "./useAdminAuth";
 import useAdminFeedback, { exportCsv } from "./useAdminFeedback";
@@ -31,7 +33,7 @@ const toTimestamp = (value: string) => {
 };
 
 export default function Analytics() {
-  const apiBase = import.meta.env.VITE_API_BASE_URL ?? "";
+  const apiBase = getApiBase();
   const { token, email, password, authStatus, authError, setEmail, setPassword, handleLogin, logout } =
     useAdminAuth(apiBase);
   const { items, status, error, stats } = useAdminFeedback({
@@ -73,6 +75,21 @@ export default function Analytics() {
     const pending = filteredItems.length - approved;
     return { approved, pending };
   }, [filteredItems]);
+
+  const categoryAverages = useMemo(
+    () =>
+      ratingCategories.map((category) => ({
+        key: category.key,
+        label: category.label,
+        value:
+          filteredItems.length === 0
+            ? null
+            : (
+                filteredItems.reduce((sum, item) => sum + item[category.key], 0) / filteredItems.length
+              ).toFixed(1),
+      })),
+    [filteredItems]
+  );
 
   const dailyBuckets = useMemo<Bucket[]>(() => {
     const todayStart = startOfDay(new Date());
@@ -272,6 +289,11 @@ export default function Analytics() {
               <div className="analytics-chip">Предложения: {typeBreakdown.suggestions}</div>
               <div className="analytics-chip">Одобрено: {statusBreakdown.approved}</div>
               <div className="analytics-chip">Неодобрено: {statusBreakdown.pending}</div>
+              {categoryAverages.map((category) => (
+                <div key={category.key} className="analytics-chip">
+                  {category.label}: {category.value ?? "-"}
+                </div>
+              ))}
             </div>
           </article>
         </section>

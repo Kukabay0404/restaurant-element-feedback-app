@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { readJsonResponse } from "../api";
+import { type CategoryRatings } from "../feedbackRatings";
+
 type FeedbackType = "review" | "suggestion";
 
-export type FeedbackItem = {
+export type FeedbackItem = CategoryRatings & {
   id: number;
   name: string;
   type: FeedbackType;
@@ -36,9 +39,33 @@ export const escapeCsv = (value: string | number | boolean | null | undefined) =
 };
 
 export const exportCsv = (rows: FeedbackItem[]) => {
-  const header = ["id", "name", "type", "rating", "date", "contact", "text", "approved"];
+  const header = [
+    "id",
+    "name",
+    "type",
+    "rating",
+    "service_rating",
+    "food_rating",
+    "interior_rating",
+    "date",
+    "contact",
+    "text",
+    "approved",
+  ];
   const lines = rows.map((item) =>
-    [item.id, item.name, item.type, item.rating, item.created_at, item.contact, item.text, item.is_approved]
+    [
+      item.id,
+      item.name,
+      item.type,
+      item.rating,
+      item.service_rating,
+      item.food_rating,
+      item.interior_rating,
+      item.created_at,
+      item.contact,
+      item.text,
+      item.is_approved,
+    ]
       .map(escapeCsv)
       .join(",")
   );
@@ -96,7 +123,7 @@ export default function useAdminFeedback({
       if (!response.ok) {
         throw new Error("Не удалось загрузить отзывы");
       }
-      const data = (await response.json()) as FeedbackItem[];
+      const data = await readJsonResponse<FeedbackItem[]>(response, "Не удалось загрузить отзывы");
       setItems(data);
       setStatus("idle");
     } catch (err) {
@@ -109,7 +136,7 @@ export default function useAdminFeedback({
     try {
       const response = await apiFetch("/api/v1/feedback/admin");
       if (!response.ok) return;
-      const data = (await response.json()) as FeedbackItem[];
+      const data = await readJsonResponse<FeedbackItem[]>(response, "Не удалось загрузить отзывы");
       setItems(data);
       setError("");
       setStatus("idle");

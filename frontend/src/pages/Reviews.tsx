@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { NavLink } from "react-router-dom";
 import "../dashboard.css";
+import { getApiBase } from "../api";
+import { formatCategoryBreakdown } from "../feedbackRatings";
 import AdminLogin from "./AdminLogin";
 import useAdminAuth from "./useAdminAuth";
 import useAdminFeedback, { exportCsv } from "./useAdminFeedback";
@@ -9,7 +11,7 @@ type FeedbackType = "review" | "suggestion";
 type StatusFilter = "all" | "approved" | "pending";
 
 export default function Reviews() {
-  const apiBase = import.meta.env.VITE_API_BASE_URL ?? "";
+  const apiBase = getApiBase();
   const { token, email, password, authStatus, authError, setEmail, setPassword, handleLogin, logout } =
     useAdminAuth(apiBase);
   const { items, status, error, actionError, approveFeedback, deleteFeedback, formatDate } = useAdminFeedback({
@@ -249,6 +251,10 @@ export default function Reviews() {
                 <div>
                   <p className="dashboard-detail-label">Оценка</p>
                   <p className="dashboard-detail-value">{selectedItem.rating}</p>
+                </div>
+                <div>
+                  <p className="dashboard-detail-label">Категории</p>
+                  <p className="dashboard-detail-text">{formatCategoryBreakdown(selectedItem)}</p>
                 </div>
                 <div>
                   <p className="dashboard-detail-label">Тип</p>

@@ -1,11 +1,25 @@
 import { useEffect, useMemo, useState } from "react";
 
+import { getApiBase, readJsonResponse } from "../api";
+import {
+  defaultCategoryRatings,
+  formatCategoryBreakdown,
+  normalizeRating,
+  ratingCategories,
+  ratingOptions,
+  type CategoryRatings,
+  type RatingField,
+} from "../feedbackRatings";
+
 type FeedbackType = "review" | "suggestion";
 
 type FeedbackItem = {
   id: number;
   type: FeedbackType;
   rating: number;
+  service_rating: number;
+  food_rating: number;
+  interior_rating: number;
   text: string;
   name: string;
   contact: string;
@@ -14,26 +28,26 @@ type FeedbackItem = {
   is_approved: boolean;
 };
 
-const ratingOptions = Array.from({ length: 10 }, (_, i) => i + 1);
-
 export default function Feedback() {
   const [type, setType] = useState<FeedbackType>("review");
-  const [rating, setRating] = useState<number>(9);
+  const [categoryRatings, setCategoryRatings] = useState<CategoryRatings>(defaultCategoryRatings);
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [text, setText] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState("");
   const [items, setItems] = useState<FeedbackItem[]>([]);
   const [listStatus, setListStatus] = useState<"idle" | "loading" | "error">("idle");
-  const [listError, setListError] = useState<string>("");
+  const [listError, setListError] = useState("");
   const [filter, setFilter] = useState<"all" | FeedbackType>("all");
+  const rating = useMemo(() => normalizeRating(categoryRatings), [categoryRatings]);
 
-  const canSubmit = useMemo(() => {
-    return name.trim().length > 0 && contact.trim().length > 0 && text.trim().length > 0;
-  }, [name, contact, text]);
+  const canSubmit = useMemo(
+    () => name.trim().length > 0 && contact.trim().length > 0 && text.trim().length > 0,
+    [name, contact, text]
+  );
 
-  const apiBase = import.meta.env.VITE_API_BASE_URL ?? "";
+  const apiBase = getApiBase();
 
   const loadFeedback = async () => {
     setListStatus("loading");
@@ -43,7 +57,7 @@ export default function Feedback() {
       if (!response.ok) {
         throw new Error("Не удалось загрузить отзывы");
       }
-      const data = (await response.json()) as FeedbackItem[];
+      const data = await readJsonResponse<FeedbackItem[]>(response, "Не удалось загрузить отзывы");
       setItems(data);
       setListStatus("idle");
     } catch (err) {
@@ -53,8 +67,15 @@ export default function Feedback() {
   };
 
   useEffect(() => {
-    loadFeedback();
+    void loadFeedback();
   }, []);
+
+  const updateCategoryRating = (key: RatingField, value: number) => {
+    setCategoryRatings((current) => ({
+      ...current,
+      [key]: value,
+    }));
+  };
 
   const submitFeedback = async () => {
     setStatus("loading");
@@ -69,6 +90,7 @@ export default function Feedback() {
         body: JSON.stringify({
           type,
           rating,
+          ...categoryRatings,
           name: name.trim(),
           contact: contact.trim(),
           text: text.trim(),
@@ -82,6 +104,7 @@ export default function Feedback() {
       }
 
       setStatus("success");
+      setCategoryRatings(defaultCategoryRatings);
       setName("");
       setContact("");
       setText("");
@@ -128,20 +151,24 @@ export default function Feedback() {
         </div>
 
         <div className="rating">
-          <p className="label">Оценка</p>
-          <div className="rating-row">
-            {ratingOptions.map((value) => (
-              <button
-                key={value}
-                type="button"
-                className={`rating-btn ${rating === value ? "active" : ""}`}
-                onClick={() => setRating(value)}
-                aria-pressed={rating === value}
-              >
-                {value}
-              </button>
-            ))}
-          </div>
+          {ratingCategories.map((category) => (
+            <div className="rating-line" key={category.key}>
+              <p className="rating-label">{category.label}</p>
+              <div className="rating-row" role="radiogroup" aria-label={`${category.label}: оценка от 1 до 5`}>
+                {ratingOptions.map((value) => (
+                  <button
+                    key={value}
+                    type="button"
+                    className={`rating-btn ${categoryRatings[category.key] === value ? "active" : ""}`}
+                    onClick={() => updateCategoryRating(category.key, value)}
+                    aria-pressed={categoryRatings[category.key] === value}
+                  >
+                    {value}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
 
         <div className="fields">
@@ -176,12 +203,7 @@ export default function Feedback() {
           />
         </div>
 
-        <button
-          className="submit"
-          onClick={submitFeedback}
-          disabled={!canSubmit || status === "loading"}
-          type="button"
-        >
+        <button className="submit" onClick={submitFeedback} disabled={!canSubmit || status === "loading"} type="button">
           {status === "loading" ? "Отправляем..." : "Отправить"}
         </button>
 
@@ -235,10 +257,9 @@ export default function Feedback() {
                 <span className="review-rating">{item.rating}</span>
               </div>
               <p className="review-text">{item.text}</p>
+              <p className="review-breakdown">{formatCategoryBreakdown(item)}</p>
               <div className="review-meta">
-                <span className="review-type">
-                  {item.type === "review" ? "Отзыв" : "Предложение"}
-                </span>
+                <span className="review-type">{item.type === "review" ? "Отзыв" : "Предложение"}</span>
               </div>
             </article>
           ))}
