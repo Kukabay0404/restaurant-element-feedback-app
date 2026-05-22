@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 
 import { getApiBase, readJsonResponse } from "../api";
 import {
@@ -81,6 +81,19 @@ export default function Feedback() {
     setStatus("loading");
     setError("");
 
+    const payloadRatings =
+      type === "suggestion"
+        ? {
+            rating: 10,
+            service_rating: 5,
+            food_rating: 5,
+            interior_rating: 5,
+          }
+        : {
+            rating,
+            ...categoryRatings,
+          };
+
     try {
       const response = await fetch(`${apiBase}/api/v1/feedback/create`, {
         method: "POST",
@@ -89,8 +102,7 @@ export default function Feedback() {
         },
         body: JSON.stringify({
           type,
-          rating,
-          ...categoryRatings,
+          ...payloadRatings,
           name: name.trim(),
           contact: contact.trim(),
           text: text.trim(),
@@ -150,26 +162,28 @@ export default function Feedback() {
           <span className="toggle-pill" />
         </div>
 
-        <div className="rating">
-          {ratingCategories.map((category) => (
-            <div className="rating-line" key={category.key}>
-              <p className="rating-label">{category.label}</p>
-              <div className="rating-row" role="radiogroup" aria-label={`${category.label}: оценка от 1 до 5`}>
-                {ratingOptions.map((value) => (
-                  <button
-                    key={value}
-                    type="button"
-                    className={`rating-btn ${categoryRatings[category.key] === value ? "active" : ""}`}
-                    onClick={() => updateCategoryRating(category.key, value)}
-                    aria-pressed={categoryRatings[category.key] === value}
-                  >
-                    {value}
-                  </button>
-                ))}
+        {type === "review" && (
+          <div className="rating">
+            {ratingCategories.map((category) => (
+              <div className="rating-line" key={category.key}>
+                <p className="rating-label">{category.label}</p>
+                <div className="rating-row" role="radiogroup" aria-label={`${category.label}: оценка от 1 до 5`}>
+                  {ratingOptions.map((value) => (
+                    <button
+                      key={value}
+                      type="button"
+                      className={`rating-btn ${categoryRatings[category.key] === value ? "active" : ""}`}
+                      onClick={() => updateCategoryRating(category.key, value)}
+                      aria-pressed={categoryRatings[category.key] === value}
+                    >
+                      {value}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         <div className="fields">
           <div className="field">
@@ -207,7 +221,7 @@ export default function Feedback() {
           {status === "loading" ? "Отправляем..." : "Отправить"}
         </button>
 
-        {status === "success" && <p className="message success">Спасибо! Мы получили ваш отзыв.</p>}
+        {status === "success" && <p className="message success">Спасибо! Мы получили ваше предложение.</p>}
         {status === "error" && <p className="message error">{error}</p>}
         {!canSubmit && status !== "success" && (
           <p className="message hint">Заполните все поля, чтобы отправить отзыв.</p>
@@ -254,10 +268,10 @@ export default function Feedback() {
             <article key={item.id} className="review-card">
               <div className="review-top">
                 <span className="review-name">{item.name}</span>
-                <span className="review-rating">{item.rating}</span>
+                {item.type === "review" && <span className="review-rating">{item.rating}</span>}
               </div>
               <p className="review-text">{item.text}</p>
-              <p className="review-breakdown">{formatCategoryBreakdown(item)}</p>
+              {item.type === "review" && <p className="review-breakdown">{formatCategoryBreakdown(item)}</p>}
               <div className="review-meta">
                 <span className="review-type">{item.type === "review" ? "Отзыв" : "Предложение"}</span>
               </div>
@@ -268,3 +282,4 @@ export default function Feedback() {
     </div>
   );
 }
+
